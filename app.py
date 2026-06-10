@@ -1,3 +1,5 @@
+from telegram_bot import send_message
+send_message("GitHub Action Started")
 from scraper import get_page_data
 from snapshot import (
     load_snapshot,
