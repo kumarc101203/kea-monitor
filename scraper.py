@@ -4,27 +4,15 @@ from bs4 import BeautifulSoup
 from config import KEA_URL
 
 
-HEADERS = {
-    "User-Agent": (
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-        "AppleWebKit/537.36 (KHTML, like Gecko) "
-        "Chrome/137.0.0.0 Safari/537.36"
-    ),
-    "Accept": (
-        "text/html,application/xhtml+xml,"
-        "application/xml;q=0.9,image/webp,*/*;q=0.8"
-    ),
-    "Accept-Language": "en-US,en;q=0.9",
-    "Connection": "keep-alive"
-}
-
-
 def get_page_data():
 
     response = requests.get(
         KEA_URL,
-        headers=HEADERS,
-        timeout=60
+        timeout=60,
+        headers={
+            "User-Agent":
+            "Mozilla/5.0"
+        }
     )
 
     response.raise_for_status()
@@ -36,19 +24,32 @@ def get_page_data():
 
     links = []
 
-    for a in soup.find_all("a"):
+    card_bodies = soup.find_all(
+        "div",
+        class_="card-body"
+    )
 
-        text = a.get_text(strip=True)
-        href = a.get("href")
+    for body in card_bodies:
 
-        if not text:
-            continue
+        for a in body.find_all("a"):
 
-        links.append(
-            {
-                "title": text,
-                "url": href
-            }
-        )
+            title = a.get_text(
+                strip=True
+            )
+
+            href = a.get("href")
+
+            if not title:
+                continue
+
+            if not href:
+                continue
+
+            links.append(
+                {
+                    "title": title,
+                    "url": href
+                }
+            )
 
     return links
