@@ -1,4 +1,5 @@
 import requests
+# pyrefly: ignore [missing-import]
 from bs4 import BeautifulSoup
 
 from config import KEA_URL
